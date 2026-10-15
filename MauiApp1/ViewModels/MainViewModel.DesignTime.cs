@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using MauiApp1.Services;
 
 namespace MauiApp1.ViewModels;
@@ -15,6 +16,7 @@ public partial class MainViewModel : ObservableObject
             MainThread.BeginInvokeOnMainThread(() => IsBluetoothEnabled = enabled);
         _bt.DeviceFound += (_, device) => MainThread.BeginInvokeOnMainThread(() => UpsertDevice(device));
         _bt.BondStateChanged += (_, e) => MainThread.BeginInvokeOnMainThread(() => OnBondChanged(e.Address, e.State));
+        _bt.PairingRequestPin += address => MainThread.BeginInvokeOnMainThread(() => OnPairingRequested(address));
         _bt.Disconnected += (_, _) => MainThread.BeginInvokeOnMainThread(OnDisconnected);
 
         _connection.LinkLost += (_, _) => MainThread.BeginInvokeOnMainThread(OnConnectionLost);

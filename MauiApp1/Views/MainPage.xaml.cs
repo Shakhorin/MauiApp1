@@ -15,8 +15,12 @@ public partial class MainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        // П. 4.1.8 ТЗ: предложить подключиться к последнему устройству при запуске.
         if (BindingContext is MainViewModel vm)
+        {
+            // Актуализация состояния адаптера (Android-приёмники зарегистрированы в MainActivity).
+            vm.RefreshAdapterState();
+            // П. 4.1.8 ТЗ: предложить подключиться к последнему устройству при запуске.
             await vm.SuggestLastDeviceAsync();
+        }
     }
 }

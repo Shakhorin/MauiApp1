@@ -3,12 +3,13 @@
     x:Class="MauiApp1.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MauiApp1"
-    Title="MauiApp1">
+    xmlns:views="clr-namespace:MauiApp1.Views"
+    Title="GamePoint Control">
 
+    <!-- Главный экран: Bluetooth-устройства (раздел 5.2 ТЗ) -->
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Устройства"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="main" />
 
 </Shell>
