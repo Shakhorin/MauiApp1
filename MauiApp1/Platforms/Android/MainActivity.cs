@@ -1,8 +1,6 @@
-﻿using System.Runtime.Versioning;
-using Android.App;
-
+﻿using Android.App;
+using Android.Content.PM;
 using Android.OS;
-
 
 namespace MauiApp1;
 

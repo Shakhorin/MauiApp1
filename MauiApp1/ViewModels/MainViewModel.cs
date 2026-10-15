@@ -6,6 +6,9 @@ using MauiApp1.Services;
 using MauiApp1.Views;
 // Разрешаем неоднозначность с Microsoft.Maui.Devices.DeviceType.
 using DeviceType = MauiApp1.Models.DeviceType;
+// В .NET MAUI Application.Current — это Microsoft.Maui.Controls.Application,
+// а не WinForms/WPF Application (у которого есть MainWindow).
+using Application = Microsoft.Maui.Controls.Application;
 
 namespace MauiApp1.ViewModels;
 

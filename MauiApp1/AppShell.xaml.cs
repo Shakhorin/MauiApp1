@@ -16,8 +16,8 @@ internal static class RoutingRouteRegisterer
 {
     public static void RegisterRoutes(Shell shell)
     {
-        shell.Routing.RegisterRoute(Views.RouteConstants.DevicePage, typeof(Views.DevicePage));
-        shell.Routing.RegisterRoute(Views.RouteConstants.PresetsPage, typeof(Views.PresetsPage));
-        shell.Routing.RegisterRoute(Views.RouteConstants.LogPage, typeof(Views.LogPage));
+        Routing.RegisterRoute(Views.RouteConstants.DevicePage, typeof(Views.DevicePage));
+        Routing.RegisterRoute(Views.RouteConstants.PresetsPage, typeof(Views.PresetsPage));
+        Routing.RegisterRoute(Views.RouteConstants.LogPage, typeof(Views.LogPage));
     }
 }
