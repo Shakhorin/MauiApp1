@@ -431,4 +431,10 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
+    <!-- Красная (опасная) кнопка: «Забыть» и т.п. (раздел 5.2 ТЗ) -->
+    <Style x:Key="DangerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#E74C3C" />
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+
 </ResourceDictionary>

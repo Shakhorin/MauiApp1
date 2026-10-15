@@ -19,21 +19,10 @@ public partial class MainViewModel : ObservableObject
     private readonly IBluetoothService _bt;
     private readonly LogService _log;
 
-    public MainViewModel(ConnectionService connection, LogService log)
-    {
-        _connection = connection;
-        _bt = connection.Bluetooth;
-        _log = log;
+    // Конструкторы — в файле MainViewModel.DesignTime.cs (DI + design-time).
 
-        _bt.AdapterStateChanged += (_, enabled) =>
-            MainThread.BeginInvokeOnMainThread(() => IsBluetoothEnabled = enabled);
-        _bt.DeviceFound += (_, device) => MainThread.BeginInvokeOnMainThread(() => UpsertDevice(device));
-        _bt.BondStateChanged += (_, e) => MainThread.BeginInvokeOnMainThread(() => OnBondChanged(e.Address, e.State));
-        _bt.PairingRequestPin += address => MainThread.BeginInvokeOnMainThread(() => OnPairingRequested(address));
-        _bt.Disconnected += (_, _) => MainThread.BeginInvokeOnMainThread(OnDisconnected);
-
-        _connection.LinkLost += (_, _) => MainThread.BeginInvokeOnMainThread(OnConnectionLost);
-    }
+    /// <summary>Синхронизация состояния адаптера с реальным (на случай, если приёмник не успел).</summary>
+    public void RefreshAdapterState() => IsBluetoothEnabled = _bt.IsEnabled;
 
     public ObservableCollection<BluetoothDeviceInfo> Devices { get; } = new();
 
