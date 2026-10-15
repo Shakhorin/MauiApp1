@@ -1,5 +1,7 @@
 using System.Globalization;
 using MauiApp1.Models;
+// Разрешаем неоднозначность с Microsoft.Maui.Devices.DeviceType.
+using DeviceType = MauiApp1.Models.DeviceType;
 
 namespace MauiApp1.Services;
 

@@ -5,7 +5,8 @@ using MauiApp1.Models;
 namespace MauiApp1.Services;
 
 /// <summary>Сообщение о новом элементе журнала (для подписки ViewModel).</summary>
-public sealed class LogAddedMessage(LogEntry entry) : ValueChangedMessage<LogEntry>(entry);
+public sealed class LogAddedMessage(LogEntry entry)
+    : CommunityToolkit.Mvvm.Messaging.ValueChangedMessage<LogEntry>(entry);
 
 /// <summary>
 /// Централизованный журнал обмена командами (раздел 5.5 ТЗ).
@@ -32,7 +33,7 @@ public sealed class LogService
             EntryAdded?.Invoke(this, entry);
         });
 
-        WeakMessenger.Instance.Send(new LogAddedMessage(entry));
+        Messenger.Default.Send(new LogAddedMessage(entry));
     }
 
     public void Tx(string command) => Add(LogDirection.Tx, Protocol.Clean(command));

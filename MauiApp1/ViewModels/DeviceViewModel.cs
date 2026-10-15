@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MauiApp1.Models;
 using MauiApp1.Services;
+// Разрешаем неоднозначность с Microsoft.Maui.Devices.DeviceType.
+using DeviceType = MauiApp1.Models.DeviceType;
 
 namespace MauiApp1.ViewModels;
 

@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using MauiApp1.Models;
 using MauiApp1.Services;
 using MauiApp1.Views;
+// Разрешаем неоднозначность с Microsoft.Maui.Devices.DeviceType.
+using DeviceType = MauiApp1.Models.DeviceType;
 
 namespace MauiApp1.ViewModels;
 
@@ -41,10 +43,10 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(CanConnect))]
     [NotifyPropertyChangedFor(nameof(CanDisconnect))]
     [NotifyPropertyChangedFor(nameof(CanForget))]
-    [NotifyCantExecute(nameof(PairCommand))]
-    [NotifyCantExecute(nameof(ConnectCommand))]
-    [NotifyCantExecute(nameof(DisconnectCommand))]
-    [NotifyCantExecute(nameof(ForgetCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PairCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
+    [NotifyCanExecuteChangedFor(nameof(DisconnectCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ForgetCommand))]
     private BluetoothDeviceInfo? selectedDevice;
 
     public bool IsSelected => SelectedDevice is not null;
@@ -239,7 +241,7 @@ public partial class MainViewModel : ObservableObject
         {
             // Публичный API Android запрещает программное удаление — поясняем и ведём в настройки.
             _log.Info("Программное удаление сопряжения недоступно — открыт системный экран Bluetooth.");
-            bool goSettings = await Application.Current!.MainWindow!.Page!.DisplayAlertAsync(
+            bool goSettings = await Application.Current!.MainWindow!.Page!.DisplayAlert(
                 "Удаление сопряжения",
                 "Ограничения Android не позволяют удалить сопряжение из приложения. " +
                 "Открыть системные настройки Bluetooth, где можно «забыть» это устройство?",

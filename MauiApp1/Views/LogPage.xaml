@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiApp1.ViewModels"
+             xmlns:models="clr-namespace:MauiApp1.Models"
+             xmlns:conv="clr-namespace:MauiApp1"
+             x:Class="MauiApp1.Views.LogPage"
+             x:DataType="vm:LogViewModel"
+             Title="Журнал обмена">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:LogDirectionToColorConverter x:Key="LogDirColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="12">
+
+        <HorizontalStackLayout Grid.Row="0" Spacing="8" Margin="0,0,0,8">
+            <Button Text="Очистить" Command="{Binding ClearCommand}" />
+            <Button Text="Копировать" Command="{Binding CopyCommand}" />
+        </HorizontalStackLayout>
+
+        <!-- Список записей: время, направление, содержимое (п. 5.5 ТЗ) -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Entries}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:LogEntry">
+                    <Label Text="{Binding FullText}"
+                           FontFamily="Monospace" FontSize="12"
+                           TextColor="{Binding Direction, Converter={StaticResource LogDirColor}}"
+                           LineBreakMode="WordWrap" Padding="0,1" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

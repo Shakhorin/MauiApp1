@@ -38,7 +38,7 @@ public partial class BluetoothDeviceInfo : ObservableObject
         _ => 0
     };
 
-    partial void OnRssChanged(int? value) => OnPropertyChanged(nameof(SignalBars));
+    partial void OnRssiChanged(int? value) => OnPropertyChanged(nameof(SignalBars));
 
     /// <summary>Сопряжено ли устройство с телефоном.</summary>
     [ObservableProperty]
