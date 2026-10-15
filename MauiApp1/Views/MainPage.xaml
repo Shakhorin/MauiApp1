@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiApp1.ViewModels"
+             xmlns:models="clr-namespace:MauiApp1.Models"
+             xmlns:conv="clr-namespace:MauiApp1"
+             x:Class="MauiApp1.Views.MainPage"
+             x:DataType="vm:MainViewModel"
+             Title="GamePoint Control">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+            <conv:InvertBoolConverter x:Key="Invert" />
+            <conv:RssiToBarsConverter x:Key="RssiBars" />
+            <conv:SelectedBorderConverter x:Key="SelBorder" />
+            <conv:DeviceTypeToShortConverter x:Key="DevTypeShort" />
+            <Style x:Key="SectionTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,8,0,4" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="12">
+
+        <!-- Верхняя панель: состояние адаптера и подключения -->
+        <VerticalStackLayout Grid.Row="0" Spacing="6">
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Включить Bluetooth"
+                        Command="{Binding EnableBluetoothCommand}" />
+                <Button Text="Сканировать"
+                        Command="{Binding ScanCommand}" />
+                <ActivityIndicator IsRunning="{Binding IsScanning}"
+                                   Color="{StaticResource Primary}"
+                                   VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Label FontSize="13">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Bluetooth: " />
+                        <Span Text="{Binding IsBluetoothEnabled, StringFormat='{0}'}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label Text="{Binding ConnectionInfo}"
+                   FontSize="13"
+                   TextColor="{StaticResource Primary}" />
+
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="13"
+                   TextColor="{StaticResource Gray500}" />
+        </VerticalStackLayout>
+
+        <!-- Список устройств + кнопки выбранного устройства -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="4">
+
+                <CollectionView ItemsSource="{Binding Devices}"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedDevice}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:BluetoothDeviceInfo">
+                            <Frame Padding="10"
+                                   Margin="0,2"
+                                   CornerRadius="8"
+                                   BorderColor="{Binding IsSelected, Converter={StaticResource SelBorder}}">
+                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="{Binding DisplayName}" FontSize="14"
+                                               LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding StateText}" FontSize="12"
+                                               TextColor="{StaticResource Gray500}" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding DeviceType, Converter={StaticResource DevTypeShort}}"
+                                           VerticalOptions="Center" FontSize="12" />
+                                    <Label Grid.Column="2"
+                                           Text="{Binding SignalBars, Converter={StaticResource RssiBars}}"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="Нет устройств. Нажмите «Сканировать» и убедитесь, что Bluetooth на Arduino включён."
+                       FontSize="12"
+                       TextColor="{StaticResource Gray500}"
+                       IsVisible="{Binding Devices.Count, Converter={StaticResource Invert}}" />
+
+                <!-- Действия над выбранным устройством (п. 5.2 ТЗ) -->
+                <Label Text="Выбранное устройство" Style="{StaticResource SectionTitle}"
+                       IsVisible="{Binding IsSelected}" />
+
+                <HorizontalStackLayout Spacing="8"
+                                       IsVisible="{Binding IsSelected}">
+                    <Button Text="Сопряжение" Command="{Binding PairCommand}" />
+                    <Button Text="Подключить" Command="{Binding ConnectCommand}" />
+                    <Button Text="Отключить" Command="{Binding DisconnectCommand}" />
+                    <Button Text="Забыть" Command="{Binding ForgetCommand}"
+                            Style="{StaticResource DangerButton}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8" Margin="0,12,0,0">
+                    <Button Text="Пресеты" Command="{Binding OpenPresetsCommand}" />
+                    <Button Text="Журнал" Command="{Binding OpenLogCommand}" />
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

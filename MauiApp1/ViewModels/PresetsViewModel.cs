@@ -27,10 +27,7 @@ public partial class PresetsViewModel : ObservableObject
 
     /// <summary>Режим редактирования: карточка с полями.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsEditing))]
     private bool isEditing;
-
-    public bool IsEditing => isEditing;
 
     // Поля редактора
     [ObservableProperty] private string editTitle = "";

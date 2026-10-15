@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiApp1.ViewModels"
+             xmlns:models="clr-namespace:MauiApp1.Models"
+             xmlns:conv="clr-namespace:MauiApp1"
+             x:Class="MauiApp1.Views.PresetsPage"
+             x:DataType="vm:PresetsViewModel"
+             Title="Пресеты">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+            <conv:InvertBoolConverter x:Key="Invert" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Padding="16">
+        <VerticalStackLayout Spacing="8">
+
+            <!-- Список пресетов (п. 5.4 ТЗ) -->
+            <CollectionView x:Name="PresetsList"
+                            ItemsSource="{Binding Items}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding Selected}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Preset">
+                        <Frame Padding="10" Margin="0,2" CornerRadius="8">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Title}" FontSize="14"
+                                           FontAttributes="Bold" />
+                                    <Label FontSize="12" TextColor="{StaticResource Gray500}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="WIN_TIME: " />
+                                                <Span Text="{Binding WinTimeMinutes, StringFormat='{0} мин'}" />
+                                                <Span Text=" | Задержка: " />
+                                                <Span Text="{Binding SwitchDelaySeconds, StringFormat='{0} сек'}" />
+                                                <Span Text=" | Интервал аптечки: " />
+                                                <Span Text="{Binding MedkitIntervalMinutes, StringFormat='{0} мин'}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <HorizontalStackLayout Grid.Column="1" Spacing="4"
+                                                       VerticalOptions="Center">
+                                    <Button Text="Применить"
+                                            Command="{Binding Path=BindingContext.ApplyCommand, Source={x:Reference PresetsList}}"
+                                            CommandParameter="{Binding .}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <HorizontalStackLayout Spacing="8">
+                <Button Text="Новый пресет" Command="{Binding CreateNewCommand}" />
+                <Button Text="Редактировать" Command="{Binding EditCommand}"
+                        CommandParameter="{Binding Selected}" />
+                <Button Text="Удалить" Command="{Binding DeleteCommand}"
+                        CommandParameter="{Binding Selected}" />
+                <Button Text="Применить к устройству" Command="{Binding ApplyCommand}"
+                        CommandParameter="{Binding Selected}" />
+            </HorizontalStackLayout>
+
+            <!-- Карточка редактирования -->
+            <Frame IsVisible="{Binding IsEditing}" Padding="12" CornerRadius="10"
+                   BorderColor="{StaticResource Primary}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Название" FontSize="13" />
+                    <Entry Text="{Binding EditTitle}" Placeholder="Сценарий А" />
+
+                    <Label Text="WIN_TIME, мин (T)" FontSize="13" Margin="0,8,0,0" />
+                    <Entry Text="{Binding EditWinTime}" Keyboard="Numeric" Placeholder="1.5" />
+
+                    <Label Text="Задержка перехвата, сек (D)" FontSize="13" Margin="0,8,0,0" />
+                    <Entry Text="{Binding EditDelay}" Keyboard="Numeric" Placeholder="45" />
+
+                    <Label Text="Интервал аптечки, мин (I)" FontSize="13" Margin="0,8,0,0" />
+                    <Entry Text="{Binding EditInterval}" Keyboard="Numeric" Placeholder="10" />
+
+                    <HorizontalStackLayout Spacing="8" Margin="0,12,0,0">
+                        <Button Text="Сохранить" Command="{Binding SaveCommand}" />
+                        <Button Text="Отмена" Command="{Binding CancelEditCommand}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

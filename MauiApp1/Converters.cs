@@ -56,6 +56,24 @@ public sealed class SelectedBorderConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+/// <summary>Направление записи журнала → цвет строки (раздел 5.5 ТЗ).</summary>
+public sealed class LogDirectionToColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is Models.LogDirection dir
+            ? dir switch
+            {
+                Models.LogDirection.Tx => "#2ECC71",
+                Models.LogDirection.Rx => "#3498DB",
+                Models.LogDirection.Error => "#E74C3C",
+                _ => "#9AA0A6"
+            }
+            : "#9AA0A6";
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 // bool → visible/collapsed
 public sealed class BoolToVisibilityConverter : IValueConverter
 {

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiApp1.ViewModels"
+             xmlns:conv="clr-namespace:MauiApp1"
+             x:Class="MauiApp1.Views.DevicePage"
+             x:DataType="vm:DeviceViewModel"
+             Title="Устройство">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+            <conv:InvertBoolConverter x:Key="Invert" />
+            <Style x:Key="FieldLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="0,8,0,2" />
+            </Style>
+            <Style x:Key="ErrorBorder" TargetType="Frame">
+                <Setter Property="BorderColor" Value="#E74C3C" />
+                <Setter Property="CornerRadius" Value="6" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Padding="16">
+        <VerticalStackLayout Spacing="4">
+
+            <Label Text="{Binding DeviceTitle}" FontSize="18" FontAttributes="Bold" />
+            <Label Text="{Binding StatusMessage}" FontSize="13"
+                   TextColor="{StaticResource Gray500}" />
+
+            <!-- Ручной выбор типа, если автоопределение не сработало -->
+            <HorizontalStackLayout Spacing="8" Margin="0,8">
+                <Button Text="Это точка захвата" Command="{Binding SetTypeCommand}"
+                        CommandParameter="point" />
+                <Button Text="Это аптечка" Command="{Binding SetTypeCommand}"
+                        CommandParameter="medkit" />
+            </HorizontalStackLayout>
+
+            <!-- ═══ Точка захвата: T / D / R (раздел 4.2 ТЗ) ═══ -->
+            <VerticalStackLayout Spacing="2" IsVisible="{Binding IsCapturePoint}">
+                <Label Text="Точка захвата" Style="{StaticResource FieldLabel}"
+                       FontAttributes="Bold" />
+
+                <Label Text="Время удержания WIN_TIME, мин (напр. 1.5 = 1 мин 30 сек)"
+                       Style="{StaticResource FieldLabel}" />
+                <Frame Style="{StaticResource ErrorBorder}"
+                       IsVisible="{Binding IsWinTimeValid, Converter={StaticResource Invert}}">
+                    <Entry Text="{Binding WinTimeText}" Keyboard="Numeric"
+                           Placeholder="1.5" />
+                </Frame>
+                <Entry Text="{Binding WinTimeText}" Keyboard="Numeric"
+                       Placeholder="1.5"
+                       IsVisible="{Binding IsWinTimeValid}" />
+                <Label Text="WIN_TIME должен быть больше 0.05 мин"
+                       FontSize="11" TextColor="#E74C3C"
+                       IsVisible="{Binding IsWinTimeValid, Converter={StaticResource Invert}}" />
+
+                <Label Text="Задержка перехвата switchDelay, сек (рекомендуется 30–90)"
+                       Style="{StaticResource FieldLabel}" />
+                <Entry Text="{Binding SwitchDelayText}" Keyboard="Numeric"
+                       Placeholder="45" />
+                <Label Text="{Binding DelayHint}" FontSize="11"
+                       TextColor="#E67E22" IsVisible="{Binding DelayHint}" />
+
+                <Button Text="Применить" Command="{Binding ApplyCaptureCommand}"
+                        Margin="0,12,0,0" />
+            </VerticalStackLayout>
+
+            <!-- ═══ Аптечка: I / R (раздел 4.3 ТЗ) ═══ -->
+            <VerticalStackLayout Spacing="2" IsVisible="{Binding IsMedkit}">
+                <Label Text="Аптечка" Style="{StaticResource FieldLabel}"
+                       FontAttributes="Bold" />
+
+                <Label Text="Интервал воскрешения, мин (целое число)"
+                       Style="{StaticResource FieldLabel}" />
+                <Entry Text="{Binding IntervalText}" Keyboard="Numeric"
+                       Placeholder="10" />
+                <Label Text="Интервал должен быть целым числом больше 0"
+                       FontSize="11" TextColor="#E74C3C"
+                       IsVisible="{Binding IsIntervalValid, Converter={StaticResource Invert}}" />
+
+                <Button Text="Применить" Command="{Binding ApplyMedkitCommand}"
+                        Margin="0,12,0,0" />
+            </VerticalStackLayout>
+
+            <!-- Сброс для обоих типов -->
+            <Button Text="Сброс (R)" Command="{Binding ResetCommand}"
+                    Margin="0,12,0,0" />
+
+            <!-- Область ответов устройства (п. 5.3 ТЗ) -->
+            <Label Text="Ответы устройства" Style="{StaticResource FieldLabel}"
+                   FontAttributes="Bold" />
+            <CollectionView ItemsSource="{Binding Responses}" HeightRequest="160">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Label Text="{Binding .}" FontFamily="Monospace" FontSize="12" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
